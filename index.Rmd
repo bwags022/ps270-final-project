@@ -16,4 +16,79 @@ I am interested in exploring data related to the olympics (because that's topica
 
 ## Milestone 2
 
-My research question is the following: How do socioeconomic factors of a country (unemployement, gdp, gdp per capita, education levels, and poverty rate) impact the number of olympic medals won by a country throughout the history of the modern Summer and Winter Olympics (1896-2024)? I hypothesize that countries with "better" socioeconomic indicators (ex. low unemployment, higher gdp per capita, more education) have a higher likelihood of winning medals. I believe this because countries with stronger economies are able to better train their athletes and have more sports competition, leading to more medals being won. I also will compare the percentages of medalists within a country's delegation to see how successful each country is. For each of the socioeconomic indicators, I will take values of each of them from each olympic year and use those values in my analysis. I will use the already created dataset of medals won to gather the list for every olympic year (it is measured by count of each type of medal). A positive correlation between gdp, gdp per capita, and education levels with medals won as well as a negative correlation between unemployment, and poverty rate with medals won would indicate support for my hypothesis as the "better" indicators should increase as medals are won. A relationship opposite or showing no correlation to those stated above would disprove my hypothesis as it would mean that "better" indicators either have an opposite effect or no effect on medals won.
+My research question is the following: How do socioeconomic factors of a country (unemployement, gdp, gdp per capita, education levels, and poverty rate) impact the number of olympic medals won by a country throughout the history of the modern Summer and Winter Olympics (1896-2022)? I hypothesize that countries with "better" socioeconomic indicators (ex. low unemployment, higher gdp per capita, more education) have a higher likelihood of winning medals. I believe this because countries with stronger economies are able to better train their athletes and have more sports competition, leading to more medals being won. I also will compare the percentages of medalists within a country's delegation to see how successful each country is. For each of the socioeconomic indicators, I will take values of each of them from each olympic year and use those values in my analysis. I will use the already created dataset of medals won to gather the list for every olympic year (it is measured by count of each type of medal). A positive correlation between gdp, gdp per capita, and education levels with medals won as well as a negative correlation between unemployment, and poverty rate with medals won would indicate support for my hypothesis as the "better" indicators should increase as medals are won. A relationship opposite or showing no correlation to those stated above would disprove my hypothesis as it would mean that "better" indicators either have an opposite effect or no effect on medals won.
+
+## Milestone 3
+
+First I will load the unclean olympic results dataset.
+
+```{r}
+library(tidyverse)
+medals <- read.csv("Olympic_Athlete_Event_Results.csv")
+```
+
+Then I will change the isTeamSport variable to a binary variable
+
+```{r}
+medals <- medals |>
+  mutate(isTeamSport = if_else(isTeamSport == "True", 1, 0))
+```
+
+I will now filter out duplicates so the team events only count as one medal per NOC.
+
+
+```{r}
+extra_count <- medals |>
+  group_by(result_id, medal) |>
+  summarize(extra_count = n())
+```
+
+
+```{r}
+medals <- medals |>
+  left_join(extra_count)
+
+extra_indiv_rows <- medals |>
+  filter(extra_count >= 2,
+         isTeamSport == FALSE)
+
+extra_team_rows <- medals |>
+  filter(extra_count >= 2,
+         isTeamSport == TRUE) |>
+   distinct(result_id, medal, country_noc, .keep_all = TRUE)
+ 
+team_rows <- medals |>
+  filter(extra_count < 2) |>
+  distinct(result_id, medal, .keep_all = TRUE)
+
+ medals_clean <- bind_rows(extra_indiv_rows, extra_team_rows, team_rows) |>
+  filter(medal == "Gold" | medal == "Silver" | medal == "Bronze") |>
+   arrange(edition_id, sport, country_noc)
+```
+
+For this milestone, I will show the top 10 medal winning countries medals sorted by Summer and Winter Olympics. The top ten countries are the United States (USA), the Soviet Union (URS), Great Britain (GBR), France (FRA), China (CHN), Germany (GER), Italy (ITA), Australia (AUS), Japan (JPN), Hungary (HUN). First I will add an indicator to separate Summer and Winter Games.
+
+```{r}
+medals_clean <- medals_clean |>
+  mutate(Season = case_when(
+    edition_id < 27 | edition_id == 53 | edition_id == 54 | edition_id == 59 | edition_id == 61 ~ "Summer",
+    edition_id >= 27 & edition_id < 51 | edition_id == 57 | edition_id == 58 | edition_id == 60 | edition_id == 62 ~ "Winter"
+  )) 
+
+medals_clean |>
+  filter(country_noc == "USA" | country_noc == "URS" | country_noc == "GBR"| country_noc == "FRA" | country_noc == "CHN" 
+         | country_noc == "GER" | country_noc == "ITA" | country_noc == "AUS" | country_noc == "JPN" | country_noc == "HUN") |>
+  group_by(country_noc, Season) |>
+  summarize(medal_count = n()) |>
+   ggplot(mapping = aes(x = country_noc, y = medal_count)) +
+  geom_col(aes(fill = Season), position = "dodge") +
+  scale_fill_manual(values = c(Summer = "gold",
+                               Winter = "steelblue1"))
+ 
+```
+
+
+
+
+
+
