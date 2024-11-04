@@ -1610,7 +1610,10 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
 <span>   <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/ggplot.html'>ggplot</a></span><span class='op'>(</span>mapping <span class='op'>=</span> <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/aes.html'>aes</a></span><span class='op'>(</span>x <span class='op'>=</span> <span class='va'>country_noc</span>, y <span class='op'>=</span> <span class='va'>medal_count</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>+</span></span>
 <span>  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/geom_bar.html'>geom_col</a></span><span class='op'>(</span><span class='fu'><a href='https://ggplot2.tidyverse.org/reference/aes.html'>aes</a></span><span class='op'>(</span>fill <span class='op'>=</span> <span class='va'>Season</span><span class='op'>)</span>, position <span class='op'>=</span> <span class='st'>"dodge"</span><span class='op'>)</span> <span class='op'>+</span></span>
 <span>  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/scale_manual.html'>scale_fill_manual</a></span><span class='op'>(</span>values <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span>Summer <span class='op'>=</span> <span class='st'>"gold"</span>,</span>
-<span>                               Winter <span class='op'>=</span> <span class='st'>"steelblue1"</span><span class='op'>)</span><span class='op'>)</span></span></code></pre>
+<span>                               Winter <span class='op'>=</span> <span class='st'>"steelblue1"</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>+</span></span>
+<span>  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/labs.html'>labs</a></span><span class='op'>(</span>x <span class='op'>=</span> <span class='st'>"Country"</span>,</span>
+<span>       y <span class='op'>=</span> <span class='st'>"Medal Count"</span>,</span>
+<span>       title <span class='op'>=</span> <span class='st'>"Medals by Olympic Season for the Top 10 Medal Winning Countries"</span><span class='op'>)</span></span></code></pre>
 </div>
 <p><img src="index_files/figure-html5/unnamed-chunk-5-1.png" width="624" /></p>
 </div>

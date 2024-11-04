@@ -83,7 +83,10 @@ medals_clean |>
    ggplot(mapping = aes(x = country_noc, y = medal_count)) +
   geom_col(aes(fill = Season), position = "dodge") +
   scale_fill_manual(values = c(Summer = "gold",
-                               Winter = "steelblue1"))
+                               Winter = "steelblue1")) +
+  labs(x = "Country",
+       y = "Medal Count",
+       title = "Medals by Olympic Season for the Top 10 Medal Winning Countries")
  
 ```
 
