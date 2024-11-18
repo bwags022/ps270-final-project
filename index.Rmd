@@ -89,6 +89,50 @@ medals_clean |>
        title = "Medals by Olympic Season for the Top 10 Medal Winning Countries")
  
 ```
+ 
+## Milestone 4
+
+First I will load the gdp by country dataset. This data set is only from 1960-2022 so we will only be looking at those olympics.
+```{r}
+gdp <- read_csv("GDP.csv")
+```
+Now I will count the medals won by each country per year.
+
+```{r}
+medals_count <- medals_clean |>
+  group_by(country_noc, year) |>
+  summarize(n = n())
+```
+
+Now I will pivot the gdp dataset and join it to the medals' count dataset.
+
+```{r}
+gdp_pivot <- gdp |>
+  pivot_longer(cols = `1960`:`2022`,
+               names_to = "year",
+               values_to = "gdp") |>
+  mutate(year = as.integer(year))
+
+medals_gdp <- inner_join(medals_count, gdp_pivot)
+```
+
+Now I will graph the medals won by GDP. 
+```{r}
+medals_gdp |>
+  ggplot(mapping = aes(x = gdp, y = n)) +
+  geom_point() +
+  geom_smooth()
+
+```
+
+
+Each point on this graph is one country's GDP in an olympic year. From this graph, we can see as GDP increases from 0 to 1 trillion (1e+13), the medals won by country increases. However, after a country has a GDP of 1 trillion, the line flattens indicating that the effect of GDP increase does not perpetually increase medal winning. There are, however, many confounding variables. One important one is that as a country's GDP increases, they usually send more athletes to the olympics, leading to more chances to win a medal, and more medals in result. Additionally, this graph has a few outlier dots which are mostly the United States and China (the two largest economies). However, by removing these two countries, the line of best fit does not change very much, indicating a minimal outlier effect from those two countries.
+
+
+
+
+
+
 
 
 
