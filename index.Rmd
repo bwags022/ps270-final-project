@@ -121,8 +121,10 @@ Now I will graph the medals won by GDP.
 medals_gdp |>
   ggplot(mapping = aes(x = gdp, y = n)) +
   geom_point() +
-  geom_smooth()
-
+  geom_smooth() +
+labs(x = "GDP",
+     y = "Medal Count",
+     title = "Effect of GDP on Olympic Medal Winnings by Year")
 ```
 
 
