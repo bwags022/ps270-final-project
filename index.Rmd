@@ -1,5 +1,5 @@
 ---
-title: "PS270 Final Project"
+title: "National Gross Domestic Product's (GDP) Effects on Olympic Athletic Performance"
 author: "Brandon Wagner"
 description: "My final project"
 output:
@@ -28,7 +28,6 @@ medals <- medals |>
 ```
 
 I will now filter out duplicates so the team events only count as one medal per NOC.
-
 
 ```{r}
 extra_count <- medals |>
@@ -160,10 +159,14 @@ modelsummary(o_200_reg, output = "markdown")
 
 This graph shows the amount of medal won by a country in each olympics (each point is one country at an olympics (example is Great Britain 2000 is one point, Great Britain 2004 is another point)) for countries over $2 trillion in GDP. We can see a mostly positive association between medal winning and GDP increase above a threshold of $2 trillion. The red line shows a line of best fit which starts with a positive slope and transitions to a flat area after a GDP of $10 trillion. The gray outline is the standard error.
 
-The regression analysis states that for every $1 billion increase in GDP is associated with an average increase of 0.006 medal winnings. This means that it takes a $166.7 billion increase in GDP to increase by one medal. I cannot accurately interpret the p-values present as there are many confounding variables that are not being taken into account in this regression (see Conclusion section for more).
+The regression analysis states that for every $1 billion increase in GDP is associated with an average increase of 0.006 medal winnings. This means that it takes a $166.7 billion increase in GDP to increase by one medal. This is a 6x increase in GDP that corresponds to a medal after the $200 billion threshold. I cannot accurately interpret the p-values present as there are many confounding variables that are not being taken into account in this regression (see Conclusion section for more).
 
+## Conclusion
 
+Overall, GDP does have a correlation with a country's medal winnings which causes me to support my hypothesis that GDP increases a country's ability to win medals. However, I do not believe that this is a causal relationship. Countries with more money have the ability to give their athletes more advanced training, better facilities, and more access to competition, all of which increase an athletes skill level. While GDP is not the direct indicator of these facets of athletic preparation, it is a primary indicator which can summarize a country's ability to provide these to their athletes. After an athlete receives these benefits, there is a maximum threshold as to their effectiveness. This threshold is my proposed $200 billion GDP mark where the effect of GDP is reduced to almost 0 where an athlete receiving the benefits no longer increases their athletic ability. This makes competition between athletes of those nations more competitive and allows for true athleticism to shine. Missing data in the GDP dataset and no data before 1960 reduces the accuracy of the trends discussed above. However, inflation and changes in the standardization of currency would also impact the trends and standardization and inflation have been fairly steady since 1960. With more time or money, I would get data on training expeditures and number of national or multinational competitions. This would allow for a stronger relationship between the money put into athletes and their olympic performance, possibly allowing for a stronger and more causal relationship between a country's GDP and olympic athletic performance.
 
+## Citations
 
+Olympic Data - https://github.com/DjangoMustang/Olympics-1896-2024-Tableau/blob/main/olympics_1896_2024_s_w.csv
 
-
+GDP Data - https://www.kaggle.com/datasets/annafabris/world-gdp-by-country-1960-2022
