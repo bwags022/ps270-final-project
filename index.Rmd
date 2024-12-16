@@ -148,6 +148,8 @@ modelsummary(u_200_reg, output = "markdown")
 
 This graph shows the amount of medal won by a country in each olympics (each point is one country at an olympics (example is Afghanistan 1960 is one point, Afghanistan 1964 is another point)) for countries under $2 trillion in GDP. We can see a mostly positive association between medal winning and GDP increase up to a threshold of $2 trillion. The blue line shows a line of best fit for this graph which has a gradual increase until the $2 trillion threshold. The gray outline is the standard error.
 
+The regression analysis states that for every $1 billion increase in GDP is associated with an averge increase of 0.033 medal winnings until a country reaches $200 billion. This means that it takes a $30.3 billion increase in GDP to increase by one medal. Once a country reaches the $200 billion GDP threshold, the association between GDP and medals reduce. I cannot accurately interpret the p-values present as there are many confounding variables that are not being taken into account in this regression (see Conclusion section for more).
+
 ```{r}
 o_200_reg <- lm(n ~ gdp_simp, data = o_200_gdp)
 
@@ -157,5 +159,11 @@ modelsummary(o_200_reg, output = "markdown")
 ```
 
 This graph shows the amount of medal won by a country in each olympics (each point is one country at an olympics (example is Great Britain 2000 is one point, Great Britain 2004 is another point)) for countries over $2 trillion in GDP. We can see a mostly positive association between medal winning and GDP increase above a threshold of $2 trillion. The red line shows a line of best fit which starts with a positive slope and transitions to a flat area after a GDP of $10 trillion. The gray outline is the standard error.
+
+The regression analysis states that for every $1 billion increase in GDP is associated with an average increase of 0.006 medal winnings. This means that it takes a $166.7 billion increase in GDP to increase by one medal. I cannot accurately interpret the p-values present as there are many confounding variables that are not being taken into account in this regression (see Conclusion section for more).
+
+
+
+
 
 

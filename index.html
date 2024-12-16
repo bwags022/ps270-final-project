@@ -1741,6 +1741,7 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
 </table>
 </div>
 <p>This graph shows the amount of medal won by a country in each olympics (each point is one country at an olympics (example is Afghanistan 1960 is one point, Afghanistan 1964 is another point)) for countries under $2 trillion in GDP. We can see a mostly positive association between medal winning and GDP increase up to a threshold of $2 trillion. The blue line shows a line of best fit for this graph which has a gradual increase until the $2 trillion threshold. The gray outline is the standard error.</p>
+<p>The regression analysis states that for every $1 billion increase in GDP is associated with an averge increase of 0.033 medal winnings until a country reaches $200 billion. This means that it takes a $30.3 billion increase in GDP to increase by one medal. Once a country reaches the $200 billion GDP threshold, the association between GDP and medals reduce. I cannot accurately interpret the p-values present as there are many confounding variables that are not being taken into account in this regression (see Conclusion section for more).</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span><span class='va'>o_200_reg</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/stats/lm.html'>lm</a></span><span class='op'>(</span><span class='va'>n</span> <span class='op'>~</span> <span class='va'>gdp_simp</span>, data <span class='op'>=</span> <span class='va'>o_200_gdp</span><span class='op'>)</span></span>
@@ -1813,6 +1814,7 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
 </table>
 </div>
 <p>This graph shows the amount of medal won by a country in each olympics (each point is one country at an olympics (example is Great Britain 2000 is one point, Great Britain 2004 is another point)) for countries over $2 trillion in GDP. We can see a mostly positive association between medal winning and GDP increase above a threshold of $2 trillion. The red line shows a line of best fit which starts with a positive slope and transitions to a flat area after a GDP of $10 trillion. The gray outline is the standard error.</p>
+<p>The regression analysis states that for every $1 billion increase in GDP is associated with an average increase of 0.006 medal winnings. This means that it takes a $166.7 billion increase in GDP to increase by one medal. I cannot accurately interpret the p-values present as there are many confounding variables that are not being taken into account in this regression (see Conclusion section for more).</p>
 <div class="sourceCode" id="cb1"><pre class="sourceCode r distill-force-highlighting-css"><code class="sourceCode r"></code></pre></div>
 <!--radix_placeholder_article_footer-->
 <!--/radix_placeholder_article_footer-->
