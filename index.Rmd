@@ -7,17 +7,11 @@ output:
     self_contained: false
 ---
 
+## Introduction
 
-## Milestone 1
+My research question is the following: How does the GDP of a country impact the number of olympic medals won by a country throughout the history of the modern Summer and Winter Olympics (1960-2022)? I hypothesize that countries with higher GDPs have a higher likelihood of winning medals. I believe this because countries with stronger economies are able to better train their athletes and have more sports competition, leading to more medals being won. I will use the already created dataset of medals won to gather the list for every olympic year (it is measured by count of each type of medal). A positive correlation between GDP with medals won would indicate support for my hypothesis as the GDP should increase as medals are won. A relationship opposite or showing no correlation to those stated above would disprove my hypothesis as it would mean that GDP either has an opposite effect or no effect on medals won. This is important research as it would explain olympic medal winning trends that do not explicitly have to do with athletic ability but more about the country's infrastructure and the opportunities of the athletes outside of pure competition.
 
-I am interested in exploring data related to the olympics (because that's topical right now) or something football/basketball related
-
-
-## Milestone 2
-
-My research question is the following: How do the gdp of a country impact the number of olympic medals won by a country throughout the history of the modern Summer and Winter Olympics (1896-2022)? I hypothesize that countries with higher GDPs have a higher likelihood of winning medals. I believe this because countries with stronger economies are able to better train their athletes and have more sports competition, leading to more medals being won. I will use the already created dataset of medals won to gather the list for every olympic year (it is measured by count of each type of medal). A positive correlation between GDP with medals won would indicate support for my hypothesis as the GDP should increase as medals are won. A relationship opposite or showing no correlation to those stated above would disprove my hypothesis as it would mean that GDP either has an opposite effect or no effect on medals won.
-
-## Milestone 3
+## Data Wrangling
 
 First I will load the unclean olympic results dataset.
 
@@ -40,10 +34,7 @@ I will now filter out duplicates so the team events only count as one medal per 
 extra_count <- medals |>
   group_by(result_id, medal) |>
   summarize(extra_count = n())
-```
 
-
-```{r}
 medals <- medals |>
   left_join(extra_count)
 
@@ -65,7 +56,7 @@ team_rows <- medals |>
    arrange(edition_id, sport, country_noc)
 ```
 
-For this milestone, I will show the top 10 medal winning countries medals sorted by Summer and Winter Olympics. The top ten countries are the United States (USA), the Soviet Union (URS), Great Britain (GBR), France (FRA), China (CHN), Germany (GER), Italy (ITA), Australia (AUS), Japan (JPN), Hungary (HUN). First I will add an indicator to separate Summer and Winter Games. Then I will filter to only the top 10 countries and create a visualization of their success in the Summer and Winter games.
+Now I will add an indicator to separate Summer and Winter Games.
 
 ```{r}
 medals_clean <- medals_clean |>
@@ -73,28 +64,14 @@ medals_clean <- medals_clean |>
     edition_id < 27 | edition_id == 53 | edition_id == 54 | edition_id == 59 | edition_id == 61 ~ "Summer",
     edition_id >= 27 & edition_id < 51 | edition_id == 57 | edition_id == 58 | edition_id == 60 | edition_id == 62 ~ "Winter"
   )) 
-
-medals_clean |>
-  filter(country_noc == "USA" | country_noc == "URS" | country_noc == "GBR"| country_noc == "FRA" | country_noc == "CHN" 
-         | country_noc == "GER" | country_noc == "ITA" | country_noc == "AUS" | country_noc == "JPN" | country_noc == "HUN") |>
-  group_by(country_noc, Season) |>
-  summarize(medal_count = n()) |>
-   ggplot(mapping = aes(x = country_noc, y = medal_count)) +
-  geom_col(aes(fill = Season), position = "dodge") +
-  scale_fill_manual(values = c(Summer = "gold",
-                               Winter = "steelblue1")) +
-  labs(x = "Country",
-       y = "Medal Count",
-       title = "Medals by Olympic Season for the Top 10 Medal Winning Countries")
- 
 ```
- 
-## Milestone 4
 
-First I will load the gdp by country dataset. This data set is only from 1960-2022 so we will only be looking at those olympics.
+Now I will load the gdp by country dataset. This data set is only from 1960-2022 so we will only be looking at those olympics.
+
 ```{r}
 gdp <- read_csv("GDP.csv")
 ```
+
 Now I will count the medals won by each country per year.
 
 ```{r}
@@ -115,60 +92,70 @@ gdp_pivot <- gdp |>
 medals_gdp <- inner_join(medals_count, gdp_pivot)
 ```
 
-Now I will graph the medals won by GDP. 
-```{r}
-medals_gdp |>
-  ggplot(mapping = aes(x = gdp, y = n)) +
-  geom_point() +
-  geom_smooth() +
-labs(x = "GDP",
-     y = "Medal Count",
-     title = "Effect of GDP on Olympic Medal Winnings by Year")
-```
-
-
-Each point on this graph is one country's GDP in an olympic year. From this graph, we can see as GDP increases from 0 to 1 trillion (1e+13), the medals won by country increases. However, after a country has a GDP of 1 trillion, the line flattens indicating that the effect of GDP increase does not perpetually increase medal winning. There are, however, many confounding variables. One important one is that as a country's GDP increases, they usually send more athletes to the olympics, leading to more chances to win a medal, and more medals in result. Additionally, this graph has a few outlier dots which are mostly the United States and China (the two largest economies). However, by removing these two countries, the line of best fit does not change very much, indicating a minimal outlier effect from those two countries.
-
-
-# Final Project
-
-## Introduction
-
-My research question is the following: How does the GDP of a country impact the number of olympic medals won by a country throughout the history of the modern Summer and Winter Olympics (1960-2022)? I hypothesize that countries with higher GDPs have a higher likelihood of winning medals. I believe this because countries with stronger economies are able to better train their athletes and have more sports competition, leading to more medals being won. I will use the already created dataset of medals won to gather the list for every olympic year (it is measured by count of each type of medal). A positive correlation between GDP with medals won would indicate support for my hypothesis as the GDP should increase as medals are won. A relationship opposite or showing no correlation to those stated above would disprove my hypothesis as it would mean that GDP either has an opposite effect or no effect on medals won. This is important research as it would explain olympic medal winning trends that do not explicitly have to do with athletic ability but more about the country's infrastructure and the opportunities of the athletes outside of pure competition.
-
 ## Data Section
 
 ```{r}
 u_200_gdp <- medals_gdp |>
   filter(gdp <= 2e+12) |>
-  ggplot(mapping = aes(x = gdp, y = n)) +
+  mutate(gdp_simp = gdp/1000000000)
+
+u_plot <- u_200_gdp |>
+  ggplot(mapping = aes(x = gdp_simp, y = n)) +
   geom_point() +
   geom_smooth() +
-labs(x = "GDP (USD)",
+labs(x = "GDP (USD in Billions)",
      y = "Medal Count",
-     title = "Effect of GDP on Olympic Medal Winnings by Year Under $200 Billion")
+     title = "Effect of GDP on Olympic Medal Winnings by Year Under $2 Trillion")
 
-u_200_gdp
+u_plot
 ```
-
-This graph shows the amount of medal won by a country in each olympics (each point is one country at an olympics (example is Afghanistan 1960 is one point, Afghanistan 1964 is another point)) for countries under $200 billion in GDP. We can see a mostly positive association between medal winning and GDP increase up to a threshold of $200 billion. The blue line shows a line of best fit for this graph which has a slope of approximately $30 billion in GDP per medal won. The gray outline is the standard error.
 
 ```{r}
 o_200_gdp <- medals_gdp |>
   filter(gdp >= 2e+12) |>
-  ggplot(mapping = aes(x = gdp, y = n)) +
+  mutate(gdp_simp = gdp/1000000000)
+
+o_plot <- o_200_gdp |>
+  ggplot(mapping = aes(x = gdp_simp, y = n)) +
   geom_point() +
   geom_smooth(color = "red") +
-labs(x = "GDP (USD)",
+labs(x = "GDP (USD in Billions)",
      y = "Medal Count",
-     title = "Effect of GDP on Olympic Medal Winnings by Year Over $200 Billion")
+     title = "Effect of GDP on Olympic Medal Winnings by Year Over $2 Trillion")
 
-o_200_gdp
+o_plot
 ```
 
-This graph shows the amount of medal won by a country in each olympics (each point is one country at an olympics (example is Great Britain 2000 is one point, Great Britain 2004 is another point)) for countries over $200 billion in GDP. We can see a mostly positive association between medal winning and GDP increase above a threshold of $200 billion. The red line shows a line of best fit which starts with a positive slope and transitions to a flat area after a GDP of $1 trillion. The gray outline is the standard error.
+The data source for the olympic data (independent variable) is a list of all olympic athletes filtered to have only the medalists as shown in the data wrangling section above. This data is a pure count variable of every olympian so it acts as a census. This data was checked for accuracy against true medal counts from the olympic website. While there is a small source of data error due to large amounts of data wrangling, I performed enough verification checks to add fidelity to the data.
 
-The data sources for this data is a list of all olympic athletes filtered to have only the medalists as shown in the data wrangling section above. Additionally, I am using GDP data from the World Bank for each countries GDP which is filtered to only the olympic years. This is a cross-sectional research study that uses all available olympic data besides 2024 athletes because no datasets had accurate representations of their athletes. The GDP data set is not complete so only the values that were present are used to fill out the two graphs.
+Additionally, I am using GDP data from the World Bank for each countries GDP which is filtered to only the olympic years. This data is collected as accurately as possible by the World Bank to track national earnings. This is almost a census as every country's data is collected. However, there are some missing data points in the dataset. Overall, this data has high levels of accuracy due to its official source nature. 
 
+This is a cross-sectional research study that uses all available olympic data besides 2024 athletes because no datasets had accurate representations of their athletes. The GDP data set is not complete so only the values that were present are used to fill out the two graphs and corresponding regression plots. Also, some countries with olympic teams do not have separate World Bank entries (for example, Puerto Rico and New Caledonia) so they are not represented in the graphs and regressions as well.
+
+## Results
+
+```{r}
+library(modelsummary)
+
+ config_modelsummary(startup_message = FALSE)
+
+u_200_reg <- lm(n ~ gdp_simp, data = u_200_gdp)
+
+u_plot
+
+modelsummary(u_200_reg, output = "markdown")
+```
+
+This graph shows the amount of medal won by a country in each olympics (each point is one country at an olympics (example is Afghanistan 1960 is one point, Afghanistan 1964 is another point)) for countries under $2 trillion in GDP. We can see a mostly positive association between medal winning and GDP increase up to a threshold of $2 trillion. The blue line shows a line of best fit for this graph which has a gradual increase until the $2 trillion threshold. The gray outline is the standard error.
+
+```{r}
+o_200_reg <- lm(n ~ gdp_simp, data = o_200_gdp)
+
+o_plot
+
+modelsummary(o_200_reg, output = "markdown")
+```
+
+This graph shows the amount of medal won by a country in each olympics (each point is one country at an olympics (example is Great Britain 2000 is one point, Great Britain 2004 is another point)) for countries over $2 trillion in GDP. We can see a mostly positive association between medal winning and GDP increase above a threshold of $2 trillion. The red line shows a line of best fit which starts with a positive slope and transitions to a flat area after a GDP of $10 trillion. The gray outline is the standard error.
 
 
